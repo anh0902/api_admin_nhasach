@@ -14,6 +14,9 @@ public class SachService {
     @Autowired
     private SachRepository sachRepository;
 
+    // Đường dẫn lưu file có thể cấu hình trong application.properties
+    private final String UPLOAD_DIR = "src/main/resources/static/uploads/";
+
     // 1. Lấy danh sách (Đã có)
     public Page<Sach> getListSachAdmin(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
@@ -25,9 +28,14 @@ public class SachService {
 
     // 2. Thêm mới hoặc Cập nhật sách
     public Sach saveOrUpdate(Sach sach) {
+        if (sach.getId() != null) {
+            Sach existing = sachRepository.findById(sach.getId()).orElse(null);
+            if (existing != null && (sach.getAnhBia() == null || sach.getAnhBia().isEmpty())) {
+                sach.setAnhBia(existing.getAnhBia()); // Giữ lại ảnh cũ nếu không có ảnh mới
+            }
+        }
         return sachRepository.save(sach);
     }
-
     // 3. Xóa sách theo ID
     public void delete(Integer id) {
         if (!sachRepository.existsById(id)) {

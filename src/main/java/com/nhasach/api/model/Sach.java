@@ -40,7 +40,7 @@ public class Sach {
     @Column(columnDefinition = "TEXT")
     private String moTa;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "anh_bia", columnDefinition = "TEXT")
     private String anhBia;
 
     @Column(name = "trang_thai")
